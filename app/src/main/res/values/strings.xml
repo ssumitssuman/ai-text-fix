@@ -1,3 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-<string name="app_name">AI Text Assistant</string>
+
+    <string name="app_name">AI Text Assistant</string>
+
+    <!-- MainActivity -->
+    <string name="status_ready">All systems ready.</string>
+    <string name="status_incomplete">Please complete setup.</string>
+    <string name="api_key_missing">API key not set.</string>
+
+    <!-- Floating button / accessibility -->
+    <string name="select_text_prompt">Please select text first.</string>
+    <string name="undo">UNDO</string>
+    <string name="processing">Processing…</string>
+    <string name="ai_unavailable">AI service unavailable.</string>
+    <string name="replacement_blocked">Text replacement blocked.</string>
+
+    <!-- Actions -->
+    <string name="copy">Copy</string>
+    <string name="replace">Replace</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Custom instruction -->
+    <string name="enter_custom_instruction">Enter custom instruction</string>
+    <string name="custom_instruction_hint">Type what you want the AI to do…</string>
+
 </resources>
