@@ -1,4 +1,4 @@
-name: Build Android APK (No Wrapper, No Cache)
+name: Build Android APK (No Wrapper, Explicit Gradle)
 
 on:
   push:
@@ -19,26 +19,28 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # Install Android SDK
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      # Accept Android SDK licenses
       - name: Accept Android licenses
         run: yes | sdkmanager --licenses
 
-      # Install Gradle WITHOUT cache
-      - name: Set up Gradle (no cache)
+      - name: Set up Gradle
+        id: gradle
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: '8.7'
           cache-disabled: true
 
-      # Build debug APK
-      - name: Build Debug APK
-        run: gradle assembleDebug --no-daemon
+      - name: Verify Gradle installation
+        run: |
+          echo "Gradle home: $GRADLE_HOME"
+          ls $GRADLE_HOME/bin
 
-      # Upload APK
+      - name: Build Debug APK
+        run: |
+          $GRADLE_HOME/bin/gradle assembleDebug --no-daemon
+
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
