@@ -1,3 +1,49 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical" android:padding="24dp"
-  android:layout_width="match_parent" android:layout_height="match_parent"/>
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Status"
+            android:textSize="16sp"
+            android:paddingBottom="12dp" />
+
+        <EditText
+            android:id="@+id/apiKeyInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter OpenAI API Key"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/saveApiKeyBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save API Key"
+            android:layout_marginTop="8dp" />
+
+        <Button
+            android:id="@+id/enableAccessibilityBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enable Accessibility"
+            android:layout_marginTop="8dp" />
+
+        <Button
+            android:id="@+id/enableOverlayBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enable Draw Over Apps"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+</ScrollView>
