@@ -1,27 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- App name -->
     <string name="app_name">AI Text Assistant</string>
 
-    <!-- MainActivity -->
-    <string name="status_ready">All systems ready.</string>
-    <string name="status_incomplete">Please complete setup.</string>
-    <string name="api_key_missing">API key not set.</string>
+    <!-- Accessibility service description (MANDATORY) -->
+    <string name="accessibility_service_description">
+        AI Text Assistant – enables text selection and AI actions
+    </string>
 
-    <!-- Floating button / accessibility -->
-    <string name="select_text_prompt">Please select text first.</string>
-    <string name="undo">UNDO</string>
-    <string name="processing">Processing…</string>
-    <string name="ai_unavailable">AI service unavailable.</string>
-    <string name="replacement_blocked">Text replacement blocked.</string>
+    <!-- Main screen status messages -->
+    <string name="status_ready">
+        All permissions granted. Select text in any app to use AI.
+    </string>
 
-    <!-- Actions -->
-    <string name="copy">Copy</string>
-    <string name="replace">Replace</string>
-    <string name="cancel">Cancel</string>
+    <string name="status_incomplete">
+        Please enable required permissions.
+    </string>
 
-    <!-- Custom instruction -->
-    <string name="enter_custom_instruction">Enter custom instruction</string>
-    <string name="custom_instruction_hint">Type what you want the AI to do…</string>
+    <!-- Prompts / messages -->
+    <string name="select_text_prompt">
+        Please select some text first.
+    </string>
+
+    <string name="api_key_missing">
+        Please set your OpenAI API key first.
+    </string>
+
+    <string name="processing">
+        Processing…
+    </string>
+
+    <string name="undo">
+        Undo
+    </string>
+
+    <string name="copy">
+        Copy
+    </string>
+
+    <string name="replace">
+        Replace
+    </string>
+
+    <string name="cancel">
+        Cancel
+    </string>
+
+    <string name="enter_custom_instruction">
+        Enter custom instruction
+    </string>
+
+    <string name="custom_instruction_hint">
+        e.g. Summarize in 3 lines, Make it formal, Rewrite as email…
+    </string>
+
+    <string name="ai_unavailable">
+        AI service unavailable. Please try again.
+    </string>
+
+    <string name="replacement_blocked">
+        Unable to replace text in this field.
+    </string>
 
 </resources>
