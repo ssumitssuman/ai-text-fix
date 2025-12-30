@@ -1,4 +1,4 @@
-package com.aitextassistant
+package com.aitextassistant.app
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
