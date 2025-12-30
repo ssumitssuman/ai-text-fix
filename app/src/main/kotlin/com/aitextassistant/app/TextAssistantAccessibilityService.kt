@@ -1,6 +1,7 @@
 package com.aitextassistant.app
 
 import android.accessibilityservice.AccessibilityService
+import android.content.Intent   // ← THIS WAS MISSING
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 
@@ -8,10 +9,20 @@ class TextAssistantAccessibilityService : AccessibilityService() {
 
     private var currentNode: AccessibilityNodeInfo? = null
 
+    override fun onServiceConnected() {
+        super.onServiceConnected()
+        instance = this
+
+        // Start floating button service
+        val intent = Intent(this, FloatingButtonService::class.java)
+        startService(intent)
+    }
+
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         event ?: return
 
-        if (event.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED ||
+        if (
+            event.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED ||
             event.eventType == AccessibilityEvent.TYPE_VIEW_FOCUSED
         ) {
             val node = event.source
@@ -63,15 +74,6 @@ class TextAssistantAccessibilityService : AccessibilityService() {
 
         fun getInstance(): TextAssistantAccessibilityService? = instance
     }
-
-    override fun onServiceConnected() {
-    super.onServiceConnected()
-    instance = this
-
-    // Start floating button service
-    val intent = Intent(this, FloatingButtonService::class.java)
-    startService(intent)
-}
 
     override fun onDestroy() {
         instance = null
