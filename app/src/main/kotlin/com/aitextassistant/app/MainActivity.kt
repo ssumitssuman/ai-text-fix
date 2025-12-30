@@ -1,4 +1,4 @@
-package com.aitextassistant.app
+package com.aitextassistant
 
 import android.content.Intent
 import android.net.Uri
