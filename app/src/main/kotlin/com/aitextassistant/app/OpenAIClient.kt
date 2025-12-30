@@ -59,7 +59,7 @@ class OpenAIClient(private val context: Context) {
         val request = Request.Builder()
             .url(
                 "https://generativelanguage.googleapis.com/v1/models/" +
-                        "gemini-1.5-flash:generateContent?key=$apiKey"
+    "gemini-pro:generateContent?key=$apiKey"
             )
             .addHeader("Content-Type", "application/json")
             .post(requestBody.toRequestBody("application/json".toMediaType()))
