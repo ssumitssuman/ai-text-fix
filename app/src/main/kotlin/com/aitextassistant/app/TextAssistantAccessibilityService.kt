@@ -2,8 +2,6 @@ package com.aitextassistant.app
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
-import android.os.Bundle
-import android.text.InputType
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.view.accessibility.AccessibilityWindowInfo
@@ -27,7 +25,6 @@ class TextAssistantAccessibilityService : AccessibilityService() {
             AccessibilityEvent.TYPE_VIEW_FOCUSED -> {
                 handleViewFocused(event)
             }
-
             AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED,
             AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> {
                 checkKeyboardVisibility()
@@ -43,7 +40,7 @@ class TextAssistantAccessibilityService : AccessibilityService() {
         currentEditNode = null
 
         val node = event.source
-        if (node != null && node.isEditable && !isPasswordField(node)) {
+        if (node != null && node.isEditable && !node.isPassword) {
             currentEditNode = node
             isFocusedOnEditText = true
         } else {
@@ -52,42 +49,29 @@ class TextAssistantAccessibilityService : AccessibilityService() {
         }
     }
 
-    private fun isPasswordField(node: AccessibilityNodeInfo): Boolean {
-        return node.isPassword ||
-            node.inputType and InputType.TYPE_TEXT_VARIATION_PASSWORD != 0 ||
-            node.inputType and InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD != 0 ||
-            node.inputType and InputType.TYPE_NUMBER_VARIATION_PASSWORD != 0
-    }
-
     private fun checkKeyboardVisibility() {
-        val windows = windows ?: return
-        var keyboardFound = false
-
-        for (window in windows) {
-            if (window.type == AccessibilityWindowInfo.TYPE_INPUT_METHOD) {
-                keyboardFound = true
-                break
-            }
+        val winList = windows ?: return
+        isKeyboardVisible = winList.any {
+            it.type == AccessibilityWindowInfo.TYPE_INPUT_METHOD
         }
-
-        isKeyboardVisible = keyboardFound
     }
 
     private fun checkEditTextFocus() {
-        val rootNode = rootInActiveWindow ?: return
-        val focusedNode = rootNode.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
+        val root = rootInActiveWindow ?: return
+        val focused = root.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
 
-        if (focusedNode != null && focusedNode.isEditable && !isPasswordField(focusedNode)) {
-            if (currentEditNode != focusedNode) {
+        if (focused != null && focused.isEditable && !focused.isPassword) {
+            if (currentEditNode != focused) {
                 currentEditNode?.recycle()
-                currentEditNode = focusedNode
+                currentEditNode = focused
             }
             isFocusedOnEditText = true
         } else {
-            focusedNode?.recycle()
+            focused?.recycle()
+            isFocusedOnEditText = false
         }
 
-        rootNode.recycle()
+        root.recycle()
     }
 
     private fun updateButtonVisibility() {
@@ -98,48 +82,35 @@ class TextAssistantAccessibilityService : AccessibilityService() {
     }
 
     private fun startFloatingButtonService() {
-        val intent = Intent(this, FloatingButtonService::class.java)
-        startService(intent)
+        startService(Intent(this, FloatingButtonService::class.java))
     }
 
+    /**
+     * If text is selected → return selection
+     * If nothing is selected → return full text
+     */
     fun getSelectedText(): String? {
-    val node = currentEditNode ?: return null
-    val fullText = node.text?.toString() ?: return null
+        val node = currentEditNode ?: return null
+        val fullText = node.text?.toString() ?: return null
 
-    val start = node.textSelectionStart
-    val end = node.textSelectionEnd
+        val start = node.textSelectionStart
+        val end = node.textSelectionEnd
 
-    return if (start >= 0 && end > start && end <= fullText.length) {
-        // User explicitly selected text
-        fullText.substring(start, end)
-    } else {
-        // No selection → use entire text
-        fullText
+        return if (start >= 0 && end > start && end <= fullText.length) {
+            fullText.substring(start, end)
+        } else {
+            fullText
+        }
     }
 
     fun replaceSelectedText(newText: String): Boolean {
         val node = currentEditNode ?: return false
-        val textStart = node.textSelectionStart
-        val textEnd = node.textSelectionEnd
-
-        if (textStart < 0 || textEnd < textStart) return false
-
-        val currentText = node.text?.toString() ?: ""
-        val updatedText =
-            currentText.substring(0, textStart) +
-            newText +
-            currentText.substring(textEnd)
-
-        val arguments = Bundle()
-        arguments.putCharSequence(
+        val args = android.os.Bundle()
+        args.putCharSequence(
             AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,
-            updatedText
+            newText
         )
-
-        return node.performAction(
-            AccessibilityNodeInfo.ACTION_SET_TEXT,
-            arguments
-        )
+        return node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, args)
     }
 
     override fun onInterrupt() {}
@@ -152,7 +123,8 @@ class TextAssistantAccessibilityService : AccessibilityService() {
     }
 
     companion object {
-        const val ACTION_UPDATE_VISIBILITY = "com.aitextassistant.UPDATE_VISIBILITY"
+        const val ACTION_UPDATE_VISIBILITY =
+            "com.aitextassistant.app.UPDATE_VISIBILITY"
         const val EXTRA_SHOULD_SHOW = "should_show"
 
         private var instance: TextAssistantAccessibilityService? = null
