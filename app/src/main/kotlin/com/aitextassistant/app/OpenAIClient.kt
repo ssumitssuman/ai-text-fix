@@ -1,4 +1,4 @@
-package com.aitextassistant.app
+package com.aitextassistant
 
 import android.content.Context
 import okhttp3.Call
