@@ -11,7 +11,7 @@
         android:theme="@style/Theme.AITextFix">
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.aitextassistant.MainActivity"
             android:exported="true">
 
             <intent-filter>
