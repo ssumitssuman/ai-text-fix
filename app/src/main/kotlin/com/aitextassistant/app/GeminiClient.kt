@@ -51,7 +51,7 @@ class GeminiClient(private val context: Context) {
 
         // CORRECT FREE-TIER GEMINI ENDPOINT
         val request = Request.Builder()
-            .url("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent")
+            .url("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent")
             .addHeader("Content-Type", "application/json")
             .addHeader("x-goog-api-key", apiKey) // API KEY IN HEADER
             .post(requestBody.toRequestBody("application/json".toMediaType()))
