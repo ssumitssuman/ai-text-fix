@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
         android:label="AI Text Assistant"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AITextFix">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
+        <!-- Main App Screen -->
         <activity
-            android:name="com.aitextassistant.MainActivity"
+            android:name=".MainActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
         <!-- Accessibility Service -->
         <service
-            android:name="com.aitextassistant.TextAssistantAccessibilityService"
+            android:name=".TextAssistantAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-            android:exported="true">
-
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
@@ -36,9 +37,9 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
 
-        <!-- Floating overlay -->
+        <!-- Floating Overlay Button -->
         <service
-            android:name="com.aitextassistant.FloatingButtonService"
+            android:name=".FloatingButtonService"
             android:exported="false" />
 
     </application>
