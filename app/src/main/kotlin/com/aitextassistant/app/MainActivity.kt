@@ -18,11 +18,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Inflate the correct UI
         setContentView(R.layout.activity_main)
 
-        // Bind views
         statusText = findViewById(R.id.statusText)
         apiKeyInput = findViewById(R.id.apiKeyInput)
 
@@ -30,11 +27,9 @@ class MainActivity : AppCompatActivity() {
         val enableAccessibilityBtn = findViewById<Button>(R.id.enableAccessibilityBtn)
         val enableOverlayBtn = findViewById<Button>(R.id.enableOverlayBtn)
 
-        // Load existing API key if saved
         loadApiKey()
         updateStatus()
 
-        // Save API key button
         saveApiKeyBtn.setOnClickListener {
             val apiKey = apiKeyInput.text.toString().trim()
             if (apiKey.isNotEmpty()) {
@@ -46,12 +41,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Open Accessibility settings
         enableAccessibilityBtn.setOnClickListener {
             startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
         }
 
-        // Open Draw Over Apps permission
         enableOverlayBtn.setOnClickListener {
             if (!Settings.canDrawOverlays(this)) {
                 val intent = Intent(
@@ -68,10 +61,6 @@ class MainActivity : AppCompatActivity() {
         updateStatus()
     }
 
-    // ============================
-    // Helpers
-    // ============================
-
     private fun loadApiKey() {
         val prefs = getSharedPreferences("ai_assistant_prefs", Context.MODE_PRIVATE)
         val apiKey = prefs.getString("openai_api_key", "")
@@ -82,36 +71,33 @@ class MainActivity : AppCompatActivity() {
 
     private fun saveApiKey(apiKey: String) {
         val prefs = getSharedPreferences("ai_assistant_prefs", Context.MODE_PRIVATE)
-        prefs.edit()
-            .putString("openai_api_key", apiKey)
-            .apply()
+        prefs.edit().putString("openai_api_key", apiKey).apply()
     }
 
     private fun updateStatus() {
         val prefs = getSharedPreferences("ai_assistant_prefs", Context.MODE_PRIVATE)
         val hasApiKey = !prefs.getString("openai_api_key", "").isNullOrEmpty()
-        val accessibilityEnabled = isAccessibilityServiceEnabled()
+        val accessibilityEnabled = isAccessibilityEnabled()
         val overlayEnabled = Settings.canDrawOverlays(this)
 
         val status = buildString {
-            append("Status\n\n")
-            append("API Key: ${if (hasApiKey) "Saved" else "Not set"}\n")
-            append("Accessibility: ${if (accessibilityEnabled) "Enabled" else "Disabled"}\n")
-            append("Overlay: ${if (overlayEnabled) "Enabled" else "Disabled"}\n")
+            append("Status:\n\n")
+            append("${if (hasApiKey) "✓" else "✗"} API Key: ${if (hasApiKey) "Saved" else "Not set"}\n")
+            append("${if (accessibilityEnabled) "✓" else "✗"} Accessibility: ${if (accessibilityEnabled) "Enabled" else "Disabled"}\n")
+            append("${if (overlayEnabled) "✓" else "✗"} Draw Over Apps: ${if (overlayEnabled) "Enabled" else "Disabled"}\n")
         }
 
         statusText.text = status
     }
 
-    private fun isAccessibilityServiceEnabled(): Boolean {
-    return try {
-        val enabled = Settings.Secure.getInt(
-            contentResolver,
-            Settings.Secure.ACCESSIBILITY_ENABLED
-        )
-        enabled == 1
-    } catch (e: Exception) {
-        false
-    }
+    private fun isAccessibilityEnabled(): Boolean {
+        return try {
+            Settings.Secure.getInt(
+                contentResolver,
+                Settings.Secure.ACCESSIBILITY_ENABLED
+            ) == 1
+        } catch (e: Exception) {
+            false
+        }
     }
 }
