@@ -103,17 +103,18 @@ class TextAssistantAccessibilityService : AccessibilityService() {
     }
 
     fun getSelectedText(): String? {
-        val node = currentEditNode ?: return null
-        val textStart = node.textSelectionStart
-        val textEnd = node.textSelectionEnd
+    val node = currentEditNode ?: return null
+    val fullText = node.text?.toString() ?: return null
 
-        if (textStart >= 0 && textEnd > textStart) {
-            val text = node.text
-            if (text != null && textEnd <= text.length) {
-                return text.substring(textStart, textEnd)
-            }
-        }
-        return null
+    val start = node.textSelectionStart
+    val end = node.textSelectionEnd
+
+    return if (start >= 0 && end > start && end <= fullText.length) {
+        // User explicitly selected text
+        fullText.substring(start, end)
+    } else {
+        // No selection → use entire text
+        fullText
     }
 
     fun replaceSelectedText(newText: String): Boolean {
