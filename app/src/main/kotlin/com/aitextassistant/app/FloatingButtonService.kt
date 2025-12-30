@@ -1,4 +1,4 @@
-package com.aitextassistant.app
+package com.aitextassistant
 
 import android.app.Service
 import android.content.BroadcastReceiver
