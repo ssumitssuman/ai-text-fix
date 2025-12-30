@@ -104,11 +104,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isAccessibilityServiceEnabled(): Boolean {
-        val serviceId = "$packageName/.TextAssistantAccessibilityService"
-        val enabledServices = Settings.Secure.getString(
+    return try {
+        val enabled = Settings.Secure.getInt(
             contentResolver,
-            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+            Settings.Secure.ACCESSIBILITY_ENABLED
         )
-        return enabledServices?.contains(serviceId) == true
+        enabled == 1
+    } catch (e: Exception) {
+        false
     }
-}
+    }
