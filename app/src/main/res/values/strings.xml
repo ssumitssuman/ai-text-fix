@@ -4,63 +4,49 @@
     <!-- App name -->
     <string name="app_name">AI Text Assistant</string>
 
-    <!-- Accessibility service description (MANDATORY) -->
-    <string name="accessibility_service_description">
-        AI Text Assistant – enables text selection and AI actions
+    <!-- Accessibility -->
+    <string name="accessibility_description">
+        Allows AI Text Assistant to read selected text and improve it using AI.
     </string>
 
-    <!-- Main screen status messages -->
+    <!-- Main screen -->
+    <string name="enable_accessibility">Enable Accessibility Service</string>
+    <string name="enable_overlay">Enable Draw Over Other Apps</string>
+
+    <!-- Status messages -->
     <string name="status_ready">
-        All permissions granted. Select text in any app to use AI.
+        All permissions granted. Select text anywhere and tap the floating button.
     </string>
 
     <string name="status_incomplete">
-        Please enable required permissions.
+        Please enable Accessibility and Overlay permissions.
     </string>
 
-    <!-- Prompts / messages -->
+    <!-- Errors & prompts -->
     <string name="select_text_prompt">
         Please select some text first.
     </string>
 
     <string name="api_key_missing">
-        Please set your OpenAI API key first.
-    </string>
-
-    <string name="processing">
-        Processing…
-    </string>
-
-    <string name="undo">
-        Undo
-    </string>
-
-    <string name="copy">
-        Copy
-    </string>
-
-    <string name="replace">
-        Replace
-    </string>
-
-    <string name="cancel">
-        Cancel
-    </string>
-
-    <string name="enter_custom_instruction">
-        Enter custom instruction
-    </string>
-
-    <string name="custom_instruction_hint">
-        e.g. Summarize in 3 lines, Make it formal, Rewrite as email…
+        API key not found. Please open the app and save your API key.
     </string>
 
     <string name="ai_unavailable">
-        AI service unavailable. Please try again.
+        AI service unavailable. Please try again later.
     </string>
 
-    <string name="replacement_blocked">
+    <string name="replacement_failed">
         Unable to replace text in this field.
     </string>
+
+    <!-- Buttons / actions -->
+    <string name="fix_grammar">Fix Grammar</string>
+    <string name="rewrite">Rewrite</string>
+    <string name="simplify">Simplify</string>
+    <string name="translate">Translate</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- General -->
+    <string name="processing">Processing…</string>
 
 </resources>
