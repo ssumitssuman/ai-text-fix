@@ -38,23 +38,29 @@ class OpenAIClient(private val context: Context) {
 
         val prompt = buildPrompt(cleanText, action, tone, customInstruction)
 
-        val messages = JSONArray().apply {
+        val contentArray = JSONArray().apply {
             put(JSONObject().apply {
-                put("role", "user")
-                put("content", prompt)
+                put("parts", JSONArray().apply {
+                    put(JSONObject().apply {
+                        put("text", prompt)
+                    })
+                })
             })
         }
 
         val requestBody = JSONObject().apply {
-            put("model", "llama3-8b-8192")
-            put("messages", messages)
-            put("temperature", 0.4)
-            put("max_tokens", 512)
+            put("contents", contentArray)
+            put("generationConfig", JSONObject().apply {
+                put("temperature", 0.4)
+                put("maxOutputTokens", 512)
+            })
         }.toString()
 
         val request = Request.Builder()
-            .url("https://api.groq.com/openai/v1/chat/completions")
-            .addHeader("Authorization", "Bearer $apiKey")
+            .url(
+                "https://generativelanguage.googleapis.com/v1/models/" +
+                        "gemini-1.5-flash:generateContent?key=$apiKey"
+            )
             .addHeader("Content-Type", "application/json")
             .post(requestBody.toRequestBody("application/json".toMediaType()))
             .build()
@@ -73,14 +79,16 @@ class OpenAIClient(private val context: Context) {
                     }
 
                     val json = JSONObject(body)
-                    val content = json
-                        .getJSONArray("choices")
+                    val textResponse = json
+                        .getJSONArray("candidates")
                         .getJSONObject(0)
-                        .getJSONObject("message")
-                        .getString("content")
+                        .getJSONObject("content")
+                        .getJSONArray("parts")
+                        .getJSONObject(0)
+                        .getString("text")
                         .trim()
 
-                    callback(Result.success(content))
+                    callback(Result.success(textResponse))
                 } catch (e: Exception) {
                     callback(Result.failure(e))
                 }
