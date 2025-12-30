@@ -12,9 +12,9 @@ import java.util.concurrent.TimeUnit
 class OpenAIClient(private val context: Context) {
 
     private val client = OkHttpClient.Builder()
-        .connectTimeout(15, TimeUnit.SECONDS)
-        .writeTimeout(15, TimeUnit.SECONDS)
-        .readTimeout(15, TimeUnit.SECONDS)
+        .connectTimeout(20, TimeUnit.SECONDS)
+        .readTimeout(20, TimeUnit.SECONDS)
+        .writeTimeout(20, TimeUnit.SECONDS)
         .build()
 
     fun processText(
@@ -30,27 +30,19 @@ class OpenAIClient(private val context: Context) {
             return
         }
 
-        val prompt = buildPrompt(text, action, tone, customInstruction)
+        val finalPrompt = buildPrompt(text, action, tone, customInstruction)
+
+        val messages = JSONArray().apply {
+            put(JSONObject().apply {
+                put("role", "user")
+                put("content", finalPrompt)
+            })
+        }
 
         val requestBody = JSONObject().apply {
             put("model", "llama3-8b-8192")
-            put("messages", JSONArray().apply {
-                put(JSONObject().apply {
-                    put("role", "system")
-                    put(
-                        "content",
-                        "You are a helpful writing assistant. Follow instructions strictly. " +
-                        "Preserve meaning unless rewriting is requested. " +
-                        "Respond in the same language as the input text."
-                    )
-                })
-                put(JSONObject().apply {
-                    put("role", "user")
-                    put("content", prompt)
-                })
-            })
-            put("temperature", 0.6)
-            put("max_tokens", 800)
+            put("messages", messages)
+            put("temperature", 0.4)
         }.toString()
 
         val request = Request.Builder()
@@ -95,20 +87,20 @@ class OpenAIClient(private val context: Context) {
         tone: ToneModifier,
         customInstruction: String?
     ): String {
-        val parts = mutableListOf<String>()
+        val sb = StringBuilder()
 
         if (action == AIAction.CUSTOM && !customInstruction.isNullOrBlank()) {
-            parts.add(customInstruction)
+            sb.append(customInstruction.trim())
         } else {
-            parts.add(action.prompt)
+            sb.append(action.prompt)
         }
 
         if (tone != ToneModifier.NONE) {
-            parts.add(tone.modifier)
+            sb.append(" ").append(tone.modifier)
         }
 
-        parts.add("\n\nText:\n$text")
-        return parts.joinToString(" ")
+        sb.append("\n\nText:\n").append(text.trim())
+        return sb.toString()
     }
 
     private fun getApiKey(): String {
