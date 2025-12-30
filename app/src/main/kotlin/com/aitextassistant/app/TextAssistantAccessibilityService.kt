@@ -65,9 +65,13 @@ class TextAssistantAccessibilityService : AccessibilityService() {
     }
 
     override fun onServiceConnected() {
-        super.onServiceConnected()
-        instance = this
-    }
+    super.onServiceConnected()
+    instance = this
+
+    // Start floating button service
+    val intent = Intent(this, FloatingButtonService::class.java)
+    startService(intent)
+}
 
     override fun onDestroy() {
         instance = null
