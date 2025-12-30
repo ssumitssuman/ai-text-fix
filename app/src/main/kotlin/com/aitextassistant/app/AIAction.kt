@@ -1,4 +1,4 @@
-package com.aitextassistant.app
+package com.aitextassistant
 
 enum class AIAction(
     val displayName: String,
