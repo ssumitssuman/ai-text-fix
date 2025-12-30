@@ -12,9 +12,9 @@ import java.util.concurrent.TimeUnit
 class OpenAIClient(private val context: Context) {
 
     private val client = OkHttpClient.Builder()
-        .connectTimeout(20, TimeUnit.SECONDS)
-        .readTimeout(20, TimeUnit.SECONDS)
-        .writeTimeout(20, TimeUnit.SECONDS)
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS)
         .build()
 
     fun processText(
@@ -25,17 +25,23 @@ class OpenAIClient(private val context: Context) {
         callback: (Result<String>) -> Unit
     ) {
         val apiKey = getApiKey()
-        if (apiKey.isEmpty()) {
+        if (apiKey.isBlank()) {
             callback(Result.failure(Exception("API key not found")))
             return
         }
 
-        val finalPrompt = buildPrompt(text, action, tone, customInstruction)
+        val cleanText = text.trim()
+        if (cleanText.isEmpty()) {
+            callback(Result.failure(Exception("No text selected")))
+            return
+        }
+
+        val prompt = buildPrompt(cleanText, action, tone, customInstruction)
 
         val messages = JSONArray().apply {
             put(JSONObject().apply {
                 put("role", "user")
-                put("content", finalPrompt)
+                put("content", prompt)
             })
         }
 
@@ -43,6 +49,7 @@ class OpenAIClient(private val context: Context) {
             put("model", "llama3-8b-8192")
             put("messages", messages)
             put("temperature", 0.4)
+            put("max_tokens", 512)
         }.toString()
 
         val request = Request.Builder()
@@ -99,7 +106,7 @@ class OpenAIClient(private val context: Context) {
             sb.append(" ").append(tone.modifier)
         }
 
-        sb.append("\n\nText:\n").append(text.trim())
+        sb.append("\n\nText:\n").append(text)
         return sb.toString()
     }
 
