@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="24dp">
 
         <TextView
             android:id="@+id/statusText"
@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:text="Status"
             android:textSize="16sp"
-            android:paddingBottom="12dp" />
+            android:paddingBottom="16dp" />
 
         <EditText
             android:id="@+id/apiKeyInput"
@@ -29,20 +29,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Save API Key"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="16dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
 
         <Button
             android:id="@+id/enableAccessibilityBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Enable Accessibility"
-            android:layout_marginTop="8dp" />
+            android:text="Enable Accessibility Service" />
 
         <Button
             android:id="@+id/enableOverlayBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Enable Draw Over Apps"
+            android:text="Enable Draw Over Other Apps"
             android:layout_marginTop="8dp" />
 
     </LinearLayout>
